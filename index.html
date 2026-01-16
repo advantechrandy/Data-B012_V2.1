@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCL (Micro Channel Lid) 技術說明</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <!-- 引入 MathJax 確保數學符號渲染正確 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --industrial-dark: #1a1a1a;
+            --industrial-gray: #2d2d2d;
+            --industrial-accent: #f39c12; /* 工業橘 */
+            --industrial-text: #e0e0e0;
+            --industrial-border: #444444;
+        }
+
+        body {
+            background-color: var(--industrial-dark);
+            color: var(--industrial-text);
+            font-family: 'Noto Sans TC', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .industrial-header {
+            background: linear-gradient(90deg, #333, #111);
+            border-bottom: 4px solid var(--industrial-accent);
+            padding: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-card {
+            background-color: var(--industrial-gray);
+            border-left: 5px solid var(--industrial-accent);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 2px;
+        }
+
+        h1, h2, h3 {
+            color: var(--industrial-accent);
+            font-weight: 700;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .spec-table th, .spec-table td {
+            border: 1px solid var(--industrial-border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .spec-table th {
+            background-color: #333;
+            color: var(--industrial-accent);
+        }
+
+        .formula {
+            background: #000;
+            padding: 1.5rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            color: #58d68d; /* 終端機綠 */
+            font-family: 'Roboto Mono', monospace;
+            border: 1px solid #333;
+        }
+
+        .image-container {
+            margin: 1.5rem 0;
+            border: 1px solid var(--industrial-border);
+            border-radius: 4px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .image-container img:hover {
+            opacity: 1;
+        }
+
+        /* 禁用選取功能 */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.8rem;
+            color: #666;
+            border-top: 1px solid var(--industrial-border);
+        }
+    </style>
+</head>
+<body class="no-select">
+
+    <header class="industrial-header">
+        <h1 class="text-3xl font-bold">MCL技術說明 V2.1</h1>
+</header>
+
+    <div class="container">
+        <!-- 1. 技術概述 -->
+        <section class="section-card">
+            <h2>01. 技術概述 (Overview)</h2>
+            <p>微通道上蓋 (Micro Channel Lid) 是高效能運算 (HPC) 與 AI 伺服器散熱方案中的核心組件。透過在蓋體內側精密加工微型流道，直接引導冷卻介質流經熱源上方，大幅降低熱阻並提升熱交換效率。</p>
+            
+            <div class="image-container">
+                <img src="https://news.microsoft.com/source/wp-content/uploads/2025/09/microfluidics-liquid-cooling-16-1900x1268.jpg" alt="[微流道液體冷卻技術圖]" onerror="this.style.display='none'">
+                <p class="text-xs p-2 text-center text-gray-500 italic">Figure 1: Advanced Microfluidics Liquid Cooling System Implementation</p>
+            </div>
+        </section>
+
+        <!-- 2. 設計細節 -->
+        <section class="section-card">
+            <h2>02. 設計細部說明 (Design Details)</h2>
+            <div class="space-y-4">
+                <h3 class="text-xl">A. 流道幾何構造 (Channel Geometry)</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>通道寬度 ($W_c$):</strong> 通常介於 $50 \mu m$ 至 $200 \mu m$。</li>
+                    <li><strong>鰭片高度 ($H_f$):</strong> 深度比控制在 $1:5$ 至 $1:10$ 之間以確保結構強度。</li>
+                    <li><strong>表面粗糙度:</strong> $Ra < 0.4 \mu m$，以減少流體阻力。</li>
+                </ul>
+
+                <h3 class="text-xl">B. 材料選擇 (Material Science)</h3>
+                <p>主要採用高導熱係數材料：</p>
+                <table class="spec-table">
+                    <thead>
+                        <tr>
+                            <th>材料 (Material)</th>
+                            <th>導熱率 (W/m·K)</th>
+                            <th>加工技術</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>無氧銅 (C1020)</td>
+                            <td>~390</td>
+                            <td>精密銑削 / 蝕刻</td>
+                        </tr>
+                        <tr>
+                            <td>單晶矽 (Silicon)</td>
+                            <td>~149</td>
+                            <td>MEMS / DRIE 蝕刻</td>
+                        </tr>
+                        <tr>
+                            <td>氮化鋁 (AlN)</td>
+                            <td>~170-230</td>
+                            <td>激光加工 / 燒結</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3. 流阻設計與壓降計算 -->
+        <section class="section-card">
+            <h2>03. 流阻設計與壓降計算 (Pressure Drop)</h2>
+            <p>在微通道設計中，流阻（Pressure Drop, $\Delta P$）決定了系統對泵浦推力的需求。過大的流阻會導致能耗增加及系統震動。</p>
+            <div class="formula">
+                $$\Delta P = f \cdot \frac{L}{D_h} \cdot \frac{\rho v^2}{2}$$
+            </div>
+            <div class="space-y-2 text-sm">
+                <p><strong>參數詳解：</strong></p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>$D_h$: 水力直徑，矩形流道公式為 $D_h = \frac{2 \cdot W_c \cdot H_c}{W_c + H_c}$</li>
+                    <li>$f$: 摩擦因子，層流狀態下 $f = \frac{C}{Re}$ ($C$ 通常由長寬比決定)</li>
+                    <li>$Re$: 雷諾數，定義為 $Re = \frac{\rho v D_h}{\mu}$</li>
+                    <li>$L$: 微通道流道總長度</li>
+                </ul>
+                <p class="mt-2 text-gray-400 italic">註：設計時應盡量將 $Re$ 保持在 2300 以下以確保穩定的層流熱交換。</p>
+            </div>
+        </section>
+
+        <!-- 4. 熱力學計算 -->
+        <section class="section-card">
+            <h2>04. 核心效能評估 (Thermodynamics)</h2>
+            <p>總熱阻 ($R_{total}$) 的基本評估模型：</p>
+            <div class="formula">
+                $$R_{total} = R_{cond} + R_{conv} + R_{cap}$$
+            </div>
+            <p class="text-sm">
+                其中：<br>
+                - $R_{cond}$: 固體傳導熱阻<br>
+                - $R_{conv}$: 流體對流熱阻<br>
+                - $R_{cap}$: 流體熱容熱阻
+            </p>
+        </section>
+
+        <!-- 5. 封裝與密封 -->
+        <section class="section-card">
+            <h2>05. 封裝與密封技術 (Sealing)</h2>
+            <p>確保長期運作穩定性，防止冷卻液滲漏：</p>
+            <ul class="list-decimal list-inside ml-4">
+                <li><strong>擴散焊 (Diffusion Bonding):</strong> 提供分子級別結合。</li>
+                <li><strong>激光焊接 (Laser Welding):</strong> 針對不鏽鋼框架。</li>
+                <li><strong>高彈性密封圈:</strong> 應用於可拆卸實驗模組。</li>
+            </ul>
+        </section>
+
+        <!-- 6. 警語 -->
+        <section class="section-card border-l-red-600">
+            <h2 style="color: #e74c3c;">06. 操作限制 (Constraints)</h2>
+            <p>操作壓力不得超過 5.0 bar。過高流速可能導致沖蝕腐蝕，建議流速控制在 $0.5 - 2.0 m/s$。</p>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2026 Created by Randy Chen</p>
+    </footer>
+
+    <script>
+        // 禁用右鍵功能
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        }, false);
+
+        // 禁用開發者工具快速鍵
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || 
+                (e.ctrlKey && e.keyCode == 85)) {
+                return false;
+            }
+        };
+    </script>
+</body>
+</html>
